@@ -9,3 +9,6 @@ fetch("https://dragonball-api.com/api/characters")
    .catch((error) => console.log(error));
 
    const botonBuscar = document.querySelector('#boton-buscar');
+   const cargarDatos = document.querySelector('#contenedor-datos')
+
+   
