@@ -33,11 +33,37 @@ fetch("https://dragonball-api.com/api/characters")
    const detalles = async (id) => {
   try {
     const response = await fetch(`https://dragonball-api.com/api/characters/${id}`);
-    if (!response.ok) {
-      throw new Error("Error en la API");
-    }
-    const data = await response.json();
-    console.log(data);
+    if (!response.ok) throw new Error("Error en la API");
+
+    const datosDetalles = await response.json();
+
+    const contenedorDetalles = document.getElementById("contenedor-detalles");
+
+    contenedorDetalles.innerHTML = `
+      <div class="card mb-3 mx-auto" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="${datosDetalles.image}" class="img-fluid rounded-start" alt="${datosDetalles.name}">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">${datosDetalles.name}</h5>
+              <p class="card-text"><strong>Raza:</strong> ${datosDetalles.race}</p>
+              <p class="card-text"><strong>Género:</strong> ${datosDetalles.gender}</p>
+              <p class="card-text"><strong>Ki:</strong> ${datosDetalles.ki}</p>
+              <p class="card-text"><strong>Descripción:</strong> ${datosDetalles.description || "Sin descripción"}</p>
+              <button class="btn btn-danger" id="cerrar-detalles">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Agrega funcionalidad al botón "Cerrar"
+    document.getElementById("cerrar-detalles").addEventListener("click", () => {
+      contenedorDetalles.innerHTML = "";
+    });
+
   } catch (error) {
     console.log(error);
   }
