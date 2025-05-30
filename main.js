@@ -11,9 +11,17 @@ fetch("https://dragonball-api.com/api/characters")
    .catch((error) => console.log(error));
 
    const botonBuscar = document.querySelector('#boton-buscar');
-   const contenedorPadre = document.querySelector('#contenedor-datos');
    const imputNombre = document.querySelector('#input-nombre-pj');
 
+   //Para saber cuantos personajes estan mostrados y cuantos faltan
+   const contenedorPadre = document.querySelector('#contenedor-datos');
+
+  let allCharacters = [];   // Acá vamos a guardar todos los personajes
+  let nextIndex = 0;        // Desde qué índice mostrar la próxima tanda
+  const chunkSize = 10;     // Cuántos personajes mostrar cada vez
+  let isLoading = false;    // Sirve para que no se repita la carga
+
+  //Funcion para cargar los datos de la URL de la solicitud de fetch
    const cargarDatos = async (URL) => {
     try {
       const response = await fetch(URL);
@@ -30,10 +38,11 @@ fetch("https://dragonball-api.com/api/characters")
     }
    };
 
+   //Funcion para traer los detalles de los personajes
    const detalles = async (id) => {
   try {
     const response = await fetch(`https://dragonball-api.com/api/characters/${id}`);
-    if (!response.ok) throw new Error("Error en la API");
+    if (!response.ok) throw new Error("Ocurrió un error descargando los datos");
 
     const datosDetalles = await response.json();
 
@@ -69,7 +78,7 @@ fetch("https://dragonball-api.com/api/characters")
   }
 }
 
-
+  //Evita que se reinicie la pagina al tocar 'Buscar'
    botonBuscar.addEventListener("click", async (c) => {
     c.preventDefault();
     const nombreBuscado = imputNombre.value.toLowerCase();
@@ -77,13 +86,20 @@ fetch("https://dragonball-api.com/api/characters")
     const datos = await cargarDatos (URL);
     const datosPersonajes = datos.items;
 
+    //Filtracion de los datos para buscar personajes por el nombre
     const resultadosFiltrados = datosPersonajes.filter(personaje => 
       personaje.name.toLowerCase().includes(nombreBuscado)
     );
     
     if (resultadosFiltrados.length === 0) {
-  contenedorPadre.innerHTML = "<p class='text-center'>No se encontraron personajes.</p>";
+  contenedorPadre.innerHTML = `
+    <div class='text-center w-100'>
+    <img class='img-fluid' style='max-width: 200px' src='https://i.pinimg.com/originals/1b/e3/9b/1be39b1ef6aa857e481d57af735bcc91.png' >
+    <p class='text-center''>No se encontraron personajes.</p>;
+    </div>
+    `
   return;
+  
   }
     console.log(resultadosFiltrados);
 

@@ -5,3 +5,7 @@ body{
 .contenedor{
     flex:1;
 }
+
+#contenedor-datos {
+    background-color: white;
+}
