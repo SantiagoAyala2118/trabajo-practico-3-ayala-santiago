@@ -81,41 +81,58 @@ function renderNextChunk() {
 const detalles = async (id) => {
   try {
     const response = await fetch(`https://dragonball-api.com/api/characters/${id}`);
-    if (!response.ok) throw new Error("Ocurrió un error descargando los datos");
+    if (!response.ok) throw new Error("Error en la API");
 
-    const datosDetalles = await response.json();
+    const personaje = await response.json();
 
-    const contenedorDetalles = document.getElementById("contenedor-detalles");
+    // Borrá cualquier modal anterior
+    const modalAnterior = document.getElementById('modal-personaje');
+    if (modalAnterior) {
+      modalAnterior.remove();
+    }
 
-    contenedorDetalles.innerHTML = `
-      <div class="card mb-3 mx-auto" style="max-width: 540px;">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img src="${datosDetalles.image}" class="img-fluid rounded-start" alt="${datosDetalles.name}">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">${datosDetalles.name}</h5>
-              <p class="card-text"><strong>Raza:</strong> ${datosDetalles.race}</p>
-              <p class="card-text"><strong>Género:</strong> ${datosDetalles.gender}</p>
-              <p class="card-text"><strong>Ki:</strong> ${datosDetalles.ki}</p>
-              <p class="card-text"><strong>Descripción:</strong> ${datosDetalles.description || "Sin descripción"}</p>
-              <button class="btn btn-danger" id="cerrar-detalles">Cerrar</button>
+    // Crea el modal con Bootstrap
+    const modalHTML = `
+      <div class="modal fade" id="modal-personaje" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel">${personaje.name}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <img src="${personaje.image}" alt="${personaje.name}" class="img-fluid rounded">
+                </div>
+                <div class="col-md-8">
+                  <p><strong>Raza:</strong> ${personaje.race}</p>
+                  <p><strong>Género:</strong> ${personaje.gender}</p>
+                  <p><strong>Ki:</strong> ${personaje.ki}</p>
+                  <p><strong>Descripción:</strong> ${personaje.description || "Sin descripción"}</p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>
       </div>
     `;
 
-    // Agrega funcionalidad al botón "Cerrar"
-    document.getElementById("cerrar-detalles").addEventListener("click", () => {
-      contenedorDetalles.innerHTML = "";
-    });
+    // Insertar modal en el body
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+    // Inicializar y mostrar modal con Bootstrap
+    const modal = new bootstrap.Modal(document.getElementById('modal-personaje'));
+    modal.show();
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
-}
+};
+
 
 //Evita que se reinicie la pagina al tocar 'Buscar'
 botonBuscar.addEventListener("click", async (c) => {
@@ -178,19 +195,5 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
-//Funcion para que cuando vaya bajando el usuario, la pagina cargue lentamente los demás personajes
-const sentinel = document.getElementById("sentinel");
 
-window.addEventListener("scroll", () => {
-  const sentinelTop = sentinel.getBoundingClientRect().top;
-  const windowHeight = window.innerHeight;
-
-  if (sentinelTop <= windowHeight && !isLoading) {
-    isLoading = true;
-    setTimeout(() => {
-      renderNextChunk();
-      isLoading = false;
-    }, 300);
-  }
-});
 
