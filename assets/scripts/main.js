@@ -11,6 +11,7 @@ fetch("https://dragonball-api.com/api/characters")
   .catch((error) => console.log(error));
 
 const botonBuscar = document.querySelector('#boton-buscar');
+const botonLimpiar = document.querySelector('#boton-limpiar')
 const imputNombre = document.querySelector('#input-nombre-pj');
 
 //Para saber cuantos personajes estan mostrados y cuantos faltan
@@ -91,7 +92,7 @@ const detalles = async (id) => {
       modalAnterior.remove();
     }
 
-    // Crea el modal con Bootstrap
+    //Se crea el modal con Bootstrap directamente en el JS
     const modalHTML = `
       <div class="modal fade" id="modal-personaje" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -193,6 +194,15 @@ contenedorPadre.addEventListener("click", (e) => {
 window.addEventListener("DOMContentLoaded", () => {
   initCharacters();
 });
+
+botonLimpiar.addEventListener("click", async () => {
+  imputNombre.value = "";             
+  contenedorPadre.innerHTML = "";     
+  nextIndex = 0;                      
+  await initCharacters();            
+});
+
+
 
 
 
