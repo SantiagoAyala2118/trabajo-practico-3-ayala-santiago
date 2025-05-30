@@ -1,5 +1,7 @@
+//Se le asigna a la url el valor del link de la api
 URL = "https://dragonball-api.com/api/characters";
 
+//Solicitud fetch
 fetch("https://dragonball-api.com/api/characters")
   .then((response) => {
     if (!response.ok) {
@@ -16,11 +18,6 @@ const imputNombre = document.querySelector('#input-nombre-pj');
 
 //Para saber cuantos personajes estan mostrados y cuantos faltan
 const contenedorPadre = document.querySelector('#contenedor-datos');
-
-let allCharacters = [];   // Acá vamos a guardar todos los personajes
-let nextIndex = 0;        // Desde qué índice mostrar la próxima tanda
-const chunkSize = 20;     // Cuántos personajes mostrar cada vez
-let isLoading = false;    // Sirve para que no se repita la carga
 
 //Funcion para cargar los datos de la URL de la solicitud de fetch
 const cargarDatos = async (URL) => {
@@ -39,13 +36,13 @@ const cargarDatos = async (URL) => {
   }
 };
 
-//Funcion para traer todos los personajes, pero mostrar solamente los primeros 10 en la pagina
+//Funcion para mostrar los primeros 10 en la pagina
 async function initCharacters() {
   try {
     isLoading = true;
     const datos = await cargarDatos(URL);
-    allCharacters = datos.items;  // Guardamos todos los personajes en una sola vez
-    renderNextChunk();            // Mostramos los primeros 10
+    allCharacters = datos.items; 
+    renderNextChunk();            
   } catch (e) {
     console.error(e);
   } finally {
@@ -53,29 +50,6 @@ async function initCharacters() {
   }
 }
 
-//Funcion para que al momento de ir bajando, muestre de a diez personajes
-function renderNextChunk() {
-  if (nextIndex >= allCharacters.length) return;
-
-  const slice = allCharacters.slice(nextIndex, nextIndex + chunkSize);
-
-  slice.forEach(personaje => {
-    contenedorPadre.innerHTML += `
-      <div class="col-3 pb-2 d-flex justify-content-center" data-id="${personaje.id}">
-        <div class="card">
-          <img class="card-img-top" src="${personaje.image}" />
-          <div class="card-body">
-            <h5 class="card-title">${personaje.name}</h5>
-            <p class="card-text">${personaje.race} - ${personaje.gender}</p>
-            <button class="btn btn-success btn-ver-detalles">Ver más</button>
-          </div>
-        </div>
-      </div>
-    `;
-  });
-
-  nextIndex += chunkSize;
-}
 
 
 //Funcion para traer los detalles de los personajes
@@ -161,6 +135,8 @@ botonBuscar.addEventListener("click", async (c) => {
   console.log(resultadosFiltrados);
 
   contenedorPadre.innerHTML = "";
+
+  //Se crean las cards con los datos de cada personaje
   resultadosFiltrados.forEach((personaje) => {
 
     contenedorPadre.innerHTML += `
@@ -183,7 +159,6 @@ botonBuscar.addEventListener("click", async (c) => {
 
 contenedorPadre.addEventListener("click", (e) => {
   if (e.target.classList.contains("btn-ver-detalles")) {
-    // accediendo al padre mas cercano
     const cardPadre = e.target.closest(".col-3");
     const id = cardPadre.dataset.id;
 
@@ -191,10 +166,13 @@ contenedorPadre.addEventListener("click", (e) => {
   }
 });
 
+
 window.addEventListener("DOMContentLoaded", () => {
   initCharacters();
 });
 
+
+//Funcion de limpiar los resultados de la busqueda
 botonLimpiar.addEventListener("click", async () => {
   imputNombre.value = "";
   contenedorPadre.innerHTML = "";
