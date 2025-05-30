@@ -196,10 +196,10 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 botonLimpiar.addEventListener("click", async () => {
-  imputNombre.value = "";             
-  contenedorPadre.innerHTML = "";     
-  nextIndex = 0;                      
-  await initCharacters();            
+  imputNombre.value = "";
+  contenedorPadre.innerHTML = "";
+  nextIndex = 0;
+  await initCharacters();
 });
 
 
