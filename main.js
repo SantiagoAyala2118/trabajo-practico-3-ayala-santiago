@@ -31,20 +31,17 @@ fetch("https://dragonball-api.com/api/characters")
    };
 
    const detalles = async (id) => {
-    try {
-      const response = await fetch(`URL${id}`);
-    
-
-      if (!response.ok){
-        throw new error("Error en la API");
-      }
-
-      const data = await response.json();
-
-    }catch(error) {
-      console.log(error);
+  try {
+    const response = await fetch(`https://dragonball-api.com/api/characters/${id}`);
+    if (!response.ok) {
+      throw new Error("Error en la API");
     }
-   };
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
    botonBuscar.addEventListener("click", async (c) => {
