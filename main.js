@@ -11,7 +11,8 @@ fetch("https://dragonball-api.com/api/characters")
    .catch((error) => console.log(error));
 
    const botonBuscar = document.querySelector('#boton-buscar');
-   const contenedorPadre = document.querySelector('#contenedor-datos')
+   const contenedorPadre = document.querySelector('#contenedor-datos');
+   const imputNombre = document.querySelector('#imput-nombre-pj');
 
    const cargarDatos = async (URL) => {
     try {
@@ -48,6 +49,7 @@ fetch("https://dragonball-api.com/api/characters")
 
    botonBuscar.addEventListener("click", async (c) => {
     c.preventDefault();
+    const resultadosFiltrados = imputNombre.ariaValueMax.toLowerCase();
 
     const datos = await cargarDatos (URL);
     const datosPersonajes = datos.items;
