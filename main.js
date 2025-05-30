@@ -1,4 +1,5 @@
 URL="https://dragonball-api.com/api/characters";
+
 fetch("https://dragonball-api.com/api/characters")
    .then((response) => {
      if (!response.ok) {
@@ -17,7 +18,7 @@ fetch("https://dragonball-api.com/api/characters")
       const response = await fetch(URL);
 
       if(!response.ok){
-        throw new error("Error en la API");
+        throw new Error("Error en la API");
       }
 
       const datos = await response.json();
@@ -45,8 +46,10 @@ fetch("https://dragonball-api.com/api/characters")
    };
 
 
-   botonBuscar.addEventListener("click", async () => {
-    const datos = await cargarDatos (response);
+   botonBuscar.addEventListener("click", async (c) => {
+    c.preventDefault();
+
+    const datos = await cargarDatos (URL);
     const datosPersonajes = datos.items;
 
     console.log(datosPersonajes);
