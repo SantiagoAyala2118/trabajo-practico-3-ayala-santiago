@@ -1,11 +1,13 @@
 body{
-    background-color: azure;
+    background-image: url("../img/fondo-nube-voladora.jpg");
 }
 
 .contenedor{
     flex:1;
 }
 
+
+
 #contenedor-datos {
-    background-color: white;
+    min-height: 500px;
 }

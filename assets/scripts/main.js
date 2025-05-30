@@ -18,7 +18,7 @@ const contenedorPadre = document.querySelector('#contenedor-datos');
 
 let allCharacters = [];   // Acá vamos a guardar todos los personajes
 let nextIndex = 0;        // Desde qué índice mostrar la próxima tanda
-const chunkSize = 10;     // Cuántos personajes mostrar cada vez
+const chunkSize = 20;     // Cuántos personajes mostrar cada vez
 let isLoading = false;    // Sirve para que no se repita la carga
 
 //Funcion para cargar los datos de la URL de la solicitud de fetch
@@ -179,12 +179,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 //Funcion para que cuando vaya bajando el usuario, la pagina cargue lentamente los demás personajes
-window.addEventListener('scroll', () => {
-  const { scrollY, innerHeight } = window;
-  const { scrollHeight } = document.documentElement;
+const sentinel = document.getElementById("sentinel");
 
+window.addEventListener("scroll", () => {
+  const sentinelTop = sentinel.getBoundingClientRect().top;
+  const windowHeight = window.innerHeight;
 
-  if (scrollY + innerHeight >= scrollHeight - 200 && !isLoading) {
+  if (sentinelTop <= windowHeight && !isLoading) {
     isLoading = true;
     setTimeout(() => {
       renderNextChunk();
@@ -192,3 +193,4 @@ window.addEventListener('scroll', () => {
     }, 300);
   }
 });
+
