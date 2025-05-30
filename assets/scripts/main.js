@@ -41,14 +41,32 @@ async function initCharacters() {
   try {
     isLoading = true;
     const datos = await cargarDatos(URL);
-    allCharacters = datos.items; 
-    renderNextChunk();            
+    allCharacters = datos.items;
+
+    contenedorPadre.innerHTML = "";
+
+    allCharacters.slice(0, 10).forEach((personaje) => {
+      contenedorPadre.innerHTML += `
+        <div class="col-3 pb-2 d-flex justify-content-center" data-id=${personaje.id}>
+          <div class="card">
+            <img class="card-img-top" src=${personaje.image} />
+            <div class="card-body">
+              <h5 class="card-title">${personaje.name}</h5>
+              <p class="card-text">${personaje.race} - ${personaje.gender}</p>
+              <button class="btn btn-success btn-ver-detalles">Ver más</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
   } catch (e) {
     console.error(e);
   } finally {
     isLoading = false;
   }
 }
+
 
 
 
