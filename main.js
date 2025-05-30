@@ -12,7 +12,7 @@ fetch("https://dragonball-api.com/api/characters")
 
    const botonBuscar = document.querySelector('#boton-buscar');
    const contenedorPadre = document.querySelector('#contenedor-datos');
-   const imputNombre = document.querySelector('#imput-nombre-pj');
+   const imputNombre = document.querySelector('#input-nombre-pj');
 
    const cargarDatos = async (URL) => {
     try {
@@ -49,14 +49,24 @@ fetch("https://dragonball-api.com/api/characters")
 
    botonBuscar.addEventListener("click", async (c) => {
     c.preventDefault();
-    const resultadosFiltrados = imputNombre.ariaValueMax.toLowerCase();
+    const nombreBuscado = imputNombre.value.toLowerCase();
 
     const datos = await cargarDatos (URL);
     const datosPersonajes = datos.items;
 
-    console.log(datosPersonajes);
+    const resultadosFiltrados = datosPersonajes.filter(personaje => 
+      personaje.name.toLowerCase().includes(nombreBuscado)
+    );
+    
+    if (resultadosFiltrados.length === 0) {
+  contenedorPadre.innerHTML = "<p class='text-center'>No se encontraron personajes.</p>";
+  return;
+  }
+    console.log(resultadosFiltrados);
 
-    datosPersonajes.forEach((personaje) => {
+     contenedorPadre.innerHTML = "";
+      resultadosFiltrados.forEach((personaje) => {
+
       contenedorPadre.innerHTML += `
       <div class="col-3 pb-2 d-flex justify-content-center" data-id=${personaje.id}>
             <div class="card">
@@ -83,4 +93,9 @@ fetch("https://dragonball-api.com/api/characters")
 
     detalles(id);
   }
+});
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const datos = await cargarDatos(URL);
+  mostrarPersonajes(datos.items);
 });
